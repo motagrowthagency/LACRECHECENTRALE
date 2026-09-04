@@ -1,0 +1,10 @@
+{
+  "description": "This user-friendly daycare website provides parents with essential information on safety, curriculum, and enrollment, fostering trust through transparency and accessibility.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
