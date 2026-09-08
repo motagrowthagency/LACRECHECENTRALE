@@ -122,7 +122,7 @@ export default function Layout() {
 
             <button
               onClick={() => navigate("/inscription-tarifs")}
-              className="relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#C86446] text-white text-xs font-bold shadow-[3px_3px_0px_0px_#301353] hover:shadow-[1px_1px_0px_0px_#301353] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 cursor-pointer whitespace-nowrap"
+              className="hidden sm:block relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#C86446] text-white text-xs font-bold shadow-[3px_3px_0px_0px_#301353] hover:shadow-[1px_1px_0px_0px_#301353] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 cursor-pointer whitespace-nowrap"
             >
               Demander une place
             </button>
@@ -241,7 +241,6 @@ export default function Layout() {
                 <li><Link to="/inscription-tarifs" className="hover:text-white transition">Inscription & Tarifs</Link></li>
                 <li><Link to="/faq" className="hover:text-white transition">FAQ</Link></li>
                 <li><Link to="/recrutement" className="hover:text-white transition">Recrutement</Link></li>
-                <li><Link to="/espace-parents" className="hover:text-white transition">Espace Parents</Link></li>
                 <li>
                   <a href={FACEBOOK_URL} target="_blank" rel="noreferrer" className="hover:text-white transition">
                     Page Facebook

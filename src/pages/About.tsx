@@ -52,7 +52,7 @@ export default function About() {
                     className="border-4 border-white shadow-2xl"
                   />
                 </div>
-                <div className="absolute -bottom-6 -right-6 w-32 sm:w-36 rotate-[5deg] z-10">
+                <div className="absolute -bottom-6 -right-2 sm:-right-6 w-32 sm:w-36 rotate-[5deg] z-10">
                   <div className="bg-white rounded-2xl p-3 border-2 border-[#301353] shadow-[5px_5px_0px_0px_#301353] text-center">
                     <div className="font-serif-heading text-2xl text-[#301353] font-semibold leading-none">35+</div>
                     <div className="text-[9px] font-bold text-[#C86446] uppercase tracking-wide mt-1">ans d'expérience</div>

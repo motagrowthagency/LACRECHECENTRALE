@@ -21,6 +21,7 @@ export default function SiteProvider({ children }: { children: React.ReactNode }
   const [rdvTitle, setRdvTitle] = useState("Demande de place & Visite");
   const [heroAge] = useState("Moyen (12 – 24 mois)");
   const [heroRythme] = useState("Toute la journée (7h30 – 18h)");
+  const todayIso = new Date().toISOString().split("T")[0];
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -38,7 +39,14 @@ export default function SiteProvider({ children }: { children: React.ReactNode }
     const parentName = formData.get("parentName") as string;
     const phone = formData.get("phone") as string;
     const age = (formData.get("childAge") as string) || heroAge;
-    const availability = (formData.get("availability") as string) || "Septembre 2026";
+    const availabilityRaw = (formData.get("availability") as string) || "";
+    const availability = availabilityRaw
+      ? new Date(availabilityRaw + "T00:00:00").toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })
+      : "Septembre 2026";
     const email = (formData.get("email") as string) || "";
 
     leadsDb.addLead({
@@ -129,12 +137,12 @@ export default function SiteProvider({ children }: { children: React.ReactNode }
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase text-[#736387] mb-1">Disponibilité / Date souhaitée</label>
+                <label className="block text-[11px] font-bold uppercase text-[#736387] mb-1">Date de visite souhaitée</label>
                 <input
-                  type="text"
+                  type="date"
                   name="availability"
-                  placeholder="Ex: Dès la semaine prochaine en matinée"
-                  className="w-full bg-[#FAF6F0] border border-[#E2D7C8] rounded-xl px-3.5 py-2.5 text-xs text-[#301353] focus:outline-none focus:ring-2 focus:ring-[#C86446]"
+                  min={todayIso}
+                  className="w-full bg-[#FAF6F0] border border-[#E2D7C8] rounded-xl px-3.5 py-2.5 text-xs text-[#301353] focus:outline-none focus:ring-2 focus:ring-[#C86446] cursor-pointer"
                 />
               </div>
 

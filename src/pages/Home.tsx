@@ -126,7 +126,7 @@ export default function Home() {
                   />
                 </div>
 
-                <div className="absolute -bottom-8 -left-8 w-40 sm:w-44 rotate-[4deg] hover:rotate-0 transition-transform duration-500 z-10">
+                <div className="absolute -bottom-8 -left-2 sm:-left-8 w-40 sm:w-44 rotate-[4deg] hover:rotate-0 transition-transform duration-500 z-10">
                   <div className="bg-white rounded-2xl p-3 border-2 border-[#301353] shadow-[5px_5px_0px_0px_#301353]">
                     <div className="flex items-center space-x-2 mb-1.5">
                       <SvgIcons.TeddyBearWithHeart className="w-8 h-8" />
@@ -143,7 +143,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-[#F4B23E] border-2 border-white shadow-lg flex flex-col items-center justify-center rotate-6 z-10">
+                <div className="absolute -top-6 -right-2 sm:-right-6 w-16 h-16 rounded-full bg-[#F4B23E] border-2 border-white shadow-lg flex flex-col items-center justify-center rotate-6 z-10">
                   <SvgIcons.Star className="w-4 h-4 text-white" />
                   <span className="text-[8px] font-black text-white leading-none mt-0.5">4.9/5</span>
                 </div>

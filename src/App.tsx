@@ -8,7 +8,6 @@ import Life from "@/pages/Life";
 import FAQ from "@/pages/FAQ";
 import Contact from "@/pages/Contact";
 import Careers from "@/pages/Careers";
-import ParentSpace from "@/pages/ParentSpace";
 import Admin from "@/pages/Admin";
 
 export default function App() {
@@ -24,7 +23,6 @@ export default function App() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/recrutement" element={<Careers />} />
-        <Route path="/espace-parents" element={<ParentSpace />} />
       </Route>
     </Routes>
   );

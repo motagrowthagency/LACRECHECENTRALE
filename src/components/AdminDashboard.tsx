@@ -135,7 +135,7 @@ export default function AdminDashboard({ onBackToSite, onLogout, onSessionExpire
     (l) => l.type === "VISITE" || l.source === "Formulaire Hero" || l.status === "Visite programmée"
   ).length;
   const countAbonnes = leads.filter(
-    (l) => l.type === "NEWSLETTER" || l.source === "Newsletter" || l.source === "Espace Parents"
+    (l) => l.type === "NEWSLETTER" || l.source === "Newsletter"
   ).length;
 
   // Filtered Leads
@@ -149,7 +149,7 @@ export default function AdminDashboard({ onBackToSite, onLogout, onSessionExpire
         (l) => l.type === "VISITE" || l.source === "Formulaire Hero" || l.status === "Visite programmée"
       );
     } else if (activeTab === "abonnes") {
-      result = result.filter((l) => l.type === "NEWSLETTER" || l.source === "Newsletter" || l.source === "Espace Parents");
+      result = result.filter((l) => l.type === "NEWSLETTER" || l.source === "Newsletter");
     }
 
     if (searchQuery.trim()) {

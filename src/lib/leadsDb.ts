@@ -29,8 +29,7 @@ export interface LeadRecord {
     | "Inscription Rapide"
     | "Formulaire Contact"
     | "Formulaire Inscription"
-    | "Formulaire Recrutement"
-    | "Espace Parents";
+    | "Formulaire Recrutement";
   formula?: string;
   startDate?: string;
   notes?: string;
