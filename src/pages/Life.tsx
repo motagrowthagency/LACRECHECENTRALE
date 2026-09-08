@@ -1,19 +1,28 @@
 import { Link } from "react-router-dom";
 import { SvgIcons } from "@/components/icons";
-import PhotoPlaceholder from "@/components/PhotoPlaceholder";
+import Photo from "@/components/Photo";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
 import { useSite } from "@/context/SiteContext";
+import coinSieste from "@/imports/photos/creche-coin-sieste.jpeg";
+import salleJeux from "@/imports/photos/creche-salle-jeux.jpeg";
+import atelierTable from "@/imports/photos/creche-atelier-table.jpeg";
+import salleClasse from "@/imports/photos/creche-salle-classe.jpeg";
+import salleActivites from "@/imports/photos/creche-salle-activites.jpeg";
+import accueilBureau from "@/imports/photos/creche-accueil-bureau.jpeg";
+import entree from "@/imports/photos/creche-entree.jpeg";
+import facade from "@/imports/photos/creche-facade.jpeg";
+import groupeTableRouge from "@/imports/photos/creche-groupe-table-rouge.jpeg";
 
-const GALLERY_LABELS = [
-  "Espace de jeux principal",
-  "Coin sieste",
-  "Salle de motricité",
-  "Espace extérieur",
-  "Atelier peinture",
-  "Séance musicale",
-  "Jeux de construction",
-  "Fête d'anniversaire",
+const GALLERY_PHOTOS = [
+  { label: "Coin sieste", img: coinSieste },
+  { label: "Espace de jeux principal", img: salleJeux },
+  { label: "Atelier & jeux de table", img: atelierTable },
+  { label: "Salle de classe", img: salleClasse },
+  { label: "Salle d'activités", img: salleActivites },
+  { label: "Accueil & bureau", img: accueilBureau },
+  { label: "Entrée de la crèche", img: entree },
+  { label: "Façade — Rue Allal Ben Abdallah", img: facade },
 ];
 
 const ARTICLES = [
@@ -65,9 +74,9 @@ export default function Life() {
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {GALLERY_LABELS.map((label, i) => (
+            {GALLERY_PHOTOS.map((item, i) => (
               <div key={i} className={i % 3 === 0 ? "rotate-1" : i % 3 === 1 ? "-rotate-1" : "rotate-0"}>
-                <PhotoPlaceholder label={`Photo — ${label}`} ratio="aspect-square" rounded="rounded-xl" className="border-2 border-white shadow-lg" />
+                <Photo src={item.img} alt={item.label} ratio="aspect-square" rounded="rounded-xl" className="border-2 border-white shadow-lg" />
               </div>
             ))}
           </div>
@@ -87,7 +96,12 @@ export default function Life() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {ARTICLES.map((article, i) => (
               <div key={i} className={`bg-white rounded-2xl overflow-hidden border-2 border-[#301353] hover:shadow-[6px_6px_0px_0px_#301353] transition-shadow ${i === 0 ? "-rotate-1" : i === 2 ? "rotate-1" : ""}`}>
-                <PhotoPlaceholder label="Illustration article" ratio="aspect-[4/3]" rounded="rounded-none" />
+                <Photo
+                  src={[groupeTableRouge, salleClasse, accueilBureau][i]}
+                  alt={article.title}
+                  ratio="aspect-[4/3]"
+                  rounded="rounded-none"
+                />
                 <div className="p-6 space-y-2.5">
                   <span className="text-[11px] font-bold text-[#C86446] uppercase tracking-wider">{article.tag}</span>
                   <h3 className="font-serif-heading font-semibold text-base text-[#301353] leading-snug">

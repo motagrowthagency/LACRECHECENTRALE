@@ -3,17 +3,37 @@ import { SvgIcons } from "@/components/icons";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
 import { useSite } from "@/context/SiteContext";
+import { leadsDb } from "@/lib/leadsDb";
 
 export default function ParentSpace() {
   const { showToast } = useSite();
   const [email, setEmail] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
       showToast("Veuillez renseigner une adresse email.");
       return;
     }
+
+    try {
+      await leadsDb.addLead({
+        parentName: email.trim(),
+        phone: "Non renseigné",
+        email: email.trim(),
+        childAge: "—",
+        type: "NEWSLETTER",
+        solutions: [],
+        sector: "",
+        message: "Inscription à l'Espace Parents depuis la page dédiée.",
+        source: "Espace Parents",
+        status: "Inscrit",
+      });
+    } catch {
+      showToast("Une erreur est survenue. Merci de réessayer plus tard.");
+      return;
+    }
+
     showToast("Merci ! Vous serez informé(e) dès le lancement de l'Espace Parents.");
     setEmail("");
   };

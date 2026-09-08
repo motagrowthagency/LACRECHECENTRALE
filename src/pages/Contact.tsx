@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SvgIcons } from "@/components/icons";
-import PhotoPlaceholder from "@/components/PhotoPlaceholder";
+import Photo from "@/components/Photo";
+import facade from "@/imports/photos/creche-facade.jpeg";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
 import { useSite } from "@/context/SiteContext";
@@ -18,27 +19,32 @@ export default function Contact() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.parentName.trim() || !form.phone.trim()) {
       showToast("Veuillez renseigner votre nom et votre numéro de téléphone.");
       return;
     }
 
-    leadsDb.addLead({
-      parentName: form.parentName.trim(),
-      phone: form.phone.trim(),
-      email: form.email.trim(),
-      childAge: form.childAge || "Non précisé",
-      type: "VISITE",
-      solutions: [form.accueil.toUpperCase()],
-      sector: "MARCHÉ CENTRAL",
-      formula: form.accueil,
-      startDate: "À définir",
-      message: form.message || "Demande envoyée depuis le formulaire de contact.",
-      source: "Formulaire Contact",
-      status: "Nouveau",
-    });
+    try {
+      await leadsDb.addLead({
+        parentName: form.parentName.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        childAge: form.childAge || "Non précisé",
+        type: "VISITE",
+        solutions: [form.accueil.toUpperCase()],
+        sector: "MARCHÉ CENTRAL",
+        formula: form.accueil,
+        startDate: "À définir",
+        message: form.message || "Demande envoyée depuis le formulaire de contact.",
+        source: "Formulaire Contact",
+        status: "Nouveau",
+      });
+    } catch {
+      showToast("Une erreur est survenue. Merci de réessayer ou de nous contacter par téléphone.");
+      return;
+    }
 
     showToast("Votre message a bien été envoyé à la direction !");
     setForm({ parentName: "", email: "", phone: "", childAge: "", accueil: "Crèche régulière", message: "" });
@@ -119,7 +125,7 @@ export default function Contact() {
                 </button>
               </div>
 
-              <PhotoPlaceholder label="Carte — localisation 125 Rue Allal Ben Abdallah, Casablanca" ratio="aspect-[4/3]" />
+              <Photo src={facade} alt="Façade de La Centrale Crèche, 125 Rue Allal Ben Abdallah, Casablanca" ratio="aspect-[4/3]" />
             </div>
 
             {/* Formulaire */}

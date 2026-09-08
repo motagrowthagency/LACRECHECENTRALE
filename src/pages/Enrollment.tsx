@@ -35,27 +35,32 @@ export default function Enrollment() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.parentName.trim() || !form.phone.trim()) {
       showToast("Veuillez renseigner votre nom et votre numéro de téléphone.");
       return;
     }
 
-    leadsDb.addLead({
-      parentName: form.parentName.trim(),
-      phone: form.phone.trim(),
-      email: form.email.trim(),
-      childAge: form.childAge,
-      type: "VISITE",
-      solutions: [`SECTION : ${form.childAge.toUpperCase()}`, form.accueil.toUpperCase()],
-      sector: "MARCHÉ CENTRAL",
-      formula: form.accueil,
-      startDate: "Rentrée 2026 / Immédiat",
-      message: form.message || "Demande d'inscription envoyée depuis la page Inscription & Tarifs.",
-      source: "Formulaire Inscription",
-      status: "Nouveau",
-    });
+    try {
+      await leadsDb.addLead({
+        parentName: form.parentName.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        childAge: form.childAge,
+        type: "VISITE",
+        solutions: [`SECTION : ${form.childAge.toUpperCase()}`, form.accueil.toUpperCase()],
+        sector: "MARCHÉ CENTRAL",
+        formula: form.accueil,
+        startDate: "Rentrée 2026 / Immédiat",
+        message: form.message || "Demande d'inscription envoyée depuis la page Inscription & Tarifs.",
+        source: "Formulaire Inscription",
+        status: "Nouveau",
+      });
+    } catch {
+      showToast("Une erreur est survenue. Merci de réessayer ou de nous contacter par téléphone.");
+      return;
+    }
 
     showToast("Votre demande d'inscription a bien été envoyée à la direction !");
     setForm({ parentName: "", phone: "", email: "", childAge: "3 à 12 mois (Section Bébés)", accueil: "Crèche régulière", message: "" });

@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import infographicImg from "@/imports/infographie_creche.png";
+import groupeTableRouge from "@/imports/photos/creche-groupe-table-rouge.jpeg";
+import atelierTable from "@/imports/photos/creche-atelier-table.jpeg";
+import salleJeux from "@/imports/photos/creche-salle-jeux.jpeg";
+import salleClasse from "@/imports/photos/creche-salle-classe.jpeg";
 import { SvgIcons } from "@/components/icons";
-import PhotoPlaceholder from "@/components/PhotoPlaceholder";
+import Photo from "@/components/Photo";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
 import Marquee from "@/components/Marquee";
@@ -19,30 +23,33 @@ export default function Home() {
     email: "",
   });
 
-  const handleHeroFormSubmit = (e: React.FormEvent) => {
+  const handleHeroFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!heroForm.parentName.trim() || !heroForm.phone.trim()) {
       showToast("Veuillez renseigner votre nom et votre numéro de téléphone.");
       return;
     }
 
-    leadsDb.addLead({
-      parentName: heroForm.parentName.trim(),
-      phone: heroForm.phone.trim(),
-      email: heroForm.email.trim(),
-      childAge: heroForm.childAge,
-      type: "VISITE",
-      solutions: [`SECTION : ${heroForm.childAge.toUpperCase()}`, "JOURNÉE CONTINUE (7H30–18H)", "VISITE DÉCOUVERTE"],
-      sector: "MARCHÉ CENTRAL",
-      formula: "Journée continue",
-      startDate: "Rentrée 2026 / Immédiat",
-      message: "Demande de place et visite envoyée depuis le formulaire d'accueil.",
-      source: "Formulaire Hero",
-      status: "Nouveau",
-    });
-
-    showToast("Votre demande de place a bien été envoyée à la direction !");
-    setHeroForm({ parentName: "", childAge: "3 à 12 mois (Section Bébés)", phone: "", email: "" });
+    try {
+      await leadsDb.addLead({
+        parentName: heroForm.parentName.trim(),
+        phone: heroForm.phone.trim(),
+        email: heroForm.email.trim(),
+        childAge: heroForm.childAge,
+        type: "VISITE",
+        solutions: [`SECTION : ${heroForm.childAge.toUpperCase()}`, "JOURNÉE CONTINUE (7H30–18H)", "VISITE DÉCOUVERTE"],
+        sector: "MARCHÉ CENTRAL",
+        formula: "Journée continue",
+        startDate: "Rentrée 2026 / Immédiat",
+        message: "Demande de place et visite envoyée depuis le formulaire d'accueil.",
+        source: "Formulaire Hero",
+        status: "Nouveau",
+      });
+      showToast("Votre demande de place a bien été envoyée à la direction !");
+      setHeroForm({ parentName: "", childAge: "3 à 12 mois (Section Bébés)", phone: "", email: "" });
+    } catch {
+      showToast("Une erreur est survenue. Merci de réessayer ou de nous contacter par téléphone.");
+    }
   };
 
   return (
@@ -110,8 +117,9 @@ export default function Home() {
               <div className="relative max-w-[380px] mx-auto">
                 <div className="absolute -inset-4 rounded-[2.5rem] border-2 border-dashed border-[#C86446]/30 -z-10" />
                 <div className="relative rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
-                  <PhotoPlaceholder
-                    label="Photo hero — enfants en atelier d'éveil, lumineuse et souriante"
+                  <Photo
+                    src={groupeTableRouge}
+                    alt="Enfants réunis autour de la table d'activités à La Centrale Crèche"
                     ratio="aspect-[4/5]"
                     rounded="rounded-[1.75rem]"
                     className="border-4 border-white shadow-2xl"
@@ -382,15 +390,15 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: "Crèche régulière", sub: "2 mois – 5 ans", text: "Accueil quotidien, éveil global et suivi personnalisé du développement de votre enfant.", rot: "-rotate-1" },
-              { title: "Halte-garderie", sub: "Tout âge, quelques heures", text: "Garde ponctuelle et flexible, à l'heure ou à la demi-journée, selon vos besoins.", rot: "rotate-0" },
-              { title: "Activités d'éveil", sub: "Motricité, langage, socialisation", text: "Ateliers sensoriels, comptines bilingues et jeux de rôle adaptés à chaque âge.", rot: "rotate-1" },
+              { title: "Crèche régulière", sub: "2 mois – 5 ans", text: "Accueil quotidien, éveil global et suivi personnalisé du développement de votre enfant.", rot: "-rotate-1", img: atelierTable },
+              { title: "Halte-garderie", sub: "Tout âge, quelques heures", text: "Garde ponctuelle et flexible, à l'heure ou à la demi-journée, selon vos besoins.", rot: "rotate-0", img: salleJeux },
+              { title: "Activités d'éveil", sub: "Motricité, langage, socialisation", text: "Ateliers sensoriels, comptines bilingues et jeux de rôle adaptés à chaque âge.", rot: "rotate-1", img: salleClasse },
             ].map((s, i) => (
               <div
                 key={i}
                 className={`bg-white rounded-2xl overflow-hidden border-2 border-[#301353] hover:shadow-[6px_6px_0px_0px_#301353] transition-shadow ${s.rot}`}
               >
-                <PhotoPlaceholder label={`${s.title} — photo à intégrer`} ratio="aspect-[4/3]" rounded="rounded-none" />
+                <Photo src={s.img} alt={s.title} ratio="aspect-[4/3]" rounded="rounded-none" />
                 <div className="p-6 space-y-2">
                   <div className="text-[11px] font-bold text-[#C86446] uppercase tracking-wider">{s.sub}</div>
                   <h3 className="font-serif-heading font-semibold text-lg text-[#301353]">{s.title}</h3>

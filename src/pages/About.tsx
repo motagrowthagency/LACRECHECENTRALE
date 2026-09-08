@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { SvgIcons } from "@/components/icons";
-import PhotoPlaceholder from "@/components/PhotoPlaceholder";
+import Photo from "@/components/Photo";
+import entree from "@/imports/photos/creche-entree.jpeg";
+import salleActivites from "@/imports/photos/creche-salle-activites.jpeg";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
 import { useSite } from "@/context/SiteContext";
@@ -42,8 +44,9 @@ export default function About() {
               <div className="relative max-w-[420px] mx-auto lg:mx-0">
                 <div className="absolute -inset-4 rounded-[2.5rem] border-2 border-dashed border-[#C86446]/30 -z-10" />
                 <div className="rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
-                  <PhotoPlaceholder
-                    label="Photo façade / entrée de la crèche, Marché Central Casablanca"
+                  <Photo
+                    src={entree}
+                    alt="Entrée de La Centrale Crèche, 125 Rue Allal Ben Abdallah, Casablanca"
                     ratio="aspect-[4/3]"
                     rounded="rounded-[1.75rem]"
                     className="border-4 border-white shadow-2xl"
@@ -147,54 +150,15 @@ export default function About() {
         </div>
       </section>
 
-      {/* ─── L'ÉQUIPE ─────────────────────────────────────────── */}
-      <section className="py-20 sm:py-28 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-            <Kicker className="justify-center">Notre équipe</Kicker>
-            <h2 className="font-serif-heading text-3xl sm:text-4xl text-[#301353] leading-tight font-normal">
-              Une équipe qualifiée et passionnée
-            </h2>
-            <p className="text-sm sm:text-base text-[#5D4E72] leading-relaxed">
-              Puéricultrices, éducatrices et personnel formé aux premiers secours, réunis autour d'une même mission :
-              le bien-être de vos enfants.
-            </p>
-          </div>
-
-          <div className="mb-14">
-            <PhotoPlaceholder
-              label="Photo de groupe — équipe éducative de La Centrale Crèche"
-              ratio="aspect-[21/9]"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { name: "Directrice de l'établissement", role: "Fondatrice & Direction pédagogique", text: "Plus de 35 ans d'expérience dans la petite enfance au service des familles de Casablanca.", rot: "-rotate-1" },
-              { name: "Responsable pédagogique", role: "Éducatrice de la petite enfance", text: "En charge du programme type mission et du suivi individuel de chaque enfant.", rot: "rotate-0" },
-              { name: "Équipe d'éducatrices", role: "Auxiliaires de puériculture", text: "Personnel formé aux premiers secours, encadrant les sections bébés, moyens et grands.", rot: "rotate-1" },
-            ].map((member, i) => (
-              <div key={i} className={`bg-[#FAF6F0] rounded-2xl overflow-hidden border-2 border-[#301353] hover:shadow-[6px_6px_0px_0px_#301353] transition-shadow ${member.rot}`}>
-                <PhotoPlaceholder label={`Photo — ${member.name}`} ratio="aspect-square" rounded="rounded-none" />
-                <div className="p-5 space-y-1.5">
-                  <h3 className="font-serif-heading font-semibold text-base text-[#301353]">{member.name}</h3>
-                  <div className="text-[11px] font-bold text-[#C86446] uppercase tracking-wider">{member.role}</div>
-                  <p className="text-xs text-[#5D4E72] leading-relaxed">{member.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ─── SÉCURITÉ & HYGIÈNE ───────────────────────────────── */}
       <section className="py-20 sm:py-28 bg-[#FAF6F0] border-y border-[#ECE5DA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 items-center">
             <div className="lg:col-span-5 order-2 lg:order-1">
               <div className="rotate-[-1deg]">
-                <PhotoPlaceholder
-                  label="Photo — espace sécurisé, protocole d'hygiène"
+                <Photo
+                  src={salleActivites}
+                  alt="Espace sécurisé et rangé de La Centrale Crèche"
                   ratio="aspect-[4/5]"
                   rounded="rounded-[1.75rem]"
                   className="border-4 border-white shadow-2xl"

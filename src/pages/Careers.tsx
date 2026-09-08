@@ -4,6 +4,7 @@ import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
 import { useSite } from "@/context/SiteContext";
 import { EMAIL_CONTACT } from "@/data/business";
+import { leadsDb } from "@/lib/leadsDb";
 
 const PROFILES = [
   { title: "Éducatrices de la petite enfance", icon: SvgIcons.AcademicCap },
@@ -23,12 +24,33 @@ export default function Careers() {
   const { showToast } = useSite();
   const [form, setForm] = useState({ name: "", email: "", phone: "", poste: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.email.trim()) {
       showToast("Veuillez renseigner votre nom et votre email.");
       return;
     }
+
+    try {
+      await leadsDb.addLead({
+        parentName: form.name.trim(),
+        phone: form.phone.trim() || "Non renseigné",
+        email: form.email.trim(),
+        childAge: "—",
+        type: "RECRUTEMENT",
+        solutions: form.poste.trim() ? [form.poste.trim()] : [],
+        sector: "",
+        formula: form.poste.trim() || "Candidature spontanée",
+        startDate: "",
+        message: form.message || "Candidature envoyée depuis la page Recrutement.",
+        source: "Formulaire Recrutement",
+        status: "Nouveau",
+      });
+    } catch {
+      showToast("Une erreur est survenue. Merci de réessayer ou de nous contacter par email.");
+      return;
+    }
+
     showToast("Votre candidature a bien été envoyée. Merci de votre intérêt pour La Centrale Crèche !");
     setForm({ name: "", email: "", phone: "", poste: "", message: "" });
   };

@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import { SvgIcons } from "@/components/icons";
-import PhotoPlaceholder from "@/components/PhotoPlaceholder";
+import Photo from "@/components/Photo";
+import groupeTableRouge from "@/imports/photos/creche-groupe-table-rouge.jpeg";
+import salleJeux from "@/imports/photos/creche-salle-jeux.jpeg";
+import salleActivites from "@/imports/photos/creche-salle-activites.jpeg";
+import atelierTable from "@/imports/photos/creche-atelier-table.jpeg";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
 import { useSite } from "@/context/SiteContext";
@@ -68,8 +72,9 @@ export default function Services() {
               <div className="relative max-w-[420px]">
                 <div className="absolute -inset-4 rounded-[2.5rem] border-2 border-dashed border-[#C86446]/30 -z-10" />
                 <div className="rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
-                  <PhotoPlaceholder
-                    label="Photo — section crèche régulière, enfants en activité"
+                  <Photo
+                    src={groupeTableRouge}
+                    alt="Enfants en activité, section crèche régulière"
                     ratio="aspect-[4/3]"
                     rounded="rounded-[1.75rem]"
                     className="border-4 border-white shadow-2xl"
@@ -129,8 +134,9 @@ export default function Services() {
               <div className="relative max-w-[420px] ml-auto">
                 <div className="absolute -inset-4 rounded-[2.5rem] border-2 border-dashed border-[#301353]/20 -z-10" />
                 <div className="rotate-[2deg] hover:rotate-0 transition-transform duration-500">
-                  <PhotoPlaceholder
-                    label="Photo — halte-garderie, accueil ponctuel des enfants"
+                  <Photo
+                    src={salleJeux}
+                    alt="Halte-garderie, accueil ponctuel des enfants"
                     ratio="aspect-[4/3]"
                     rounded="rounded-[1.75rem]"
                     className="border-4 border-white shadow-2xl"
@@ -154,12 +160,12 @@ export default function Services() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {[
-              { label: "Salle de motricité", rot: "-rotate-1" },
-              { label: "Coin lecture & langage", rot: "rotate-0" },
-              { label: "Atelier créatif", rot: "rotate-1" },
+              { label: "Salle de motricité", rot: "-rotate-1", img: salleJeux },
+              { label: "Coin lecture & langage", rot: "rotate-0", img: salleActivites },
+              { label: "Atelier créatif", rot: "rotate-1", img: atelierTable },
             ].map((item, i) => (
               <div key={i} className={`bg-white rounded-2xl overflow-hidden border-2 border-[#301353] hover:shadow-[6px_6px_0px_0px_#301353] transition-shadow ${item.rot}`}>
-                <PhotoPlaceholder label={`Photo — ${item.label}`} ratio="aspect-[4/3]" rounded="rounded-none" />
+                <Photo src={item.img} alt={item.label} ratio="aspect-[4/3]" rounded="rounded-none" />
               </div>
             ))}
           </div>

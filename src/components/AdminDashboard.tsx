@@ -1,18 +1,46 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { LeadRecord, LeadType, leadsDb } from "../lib/leadsDb";
+import { ApiError } from "../lib/api";
 
 interface AdminDashboardProps {
   onBackToSite: () => void;
+  onLogout: () => void;
+  onSessionExpired: () => void;
   logoSrc?: string;
 }
 
-export default function AdminDashboard({ onBackToSite, logoSrc }: AdminDashboardProps) {
-  const [leads, setLeads] = useState<LeadRecord[]>(() => leadsDb.getLeads());
+export default function AdminDashboard({ onBackToSite, onLogout, onSessionExpired, logoSrc }: AdminDashboardProps) {
+  const [leads, setLeads] = useState<LeadRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"inscriptions" | "visites" | "abonnes">("inscriptions");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLead, setSelectedLead] = useState<LeadRecord | null>(null);
   const [isNewLeadModalOpen, setIsNewLeadModalOpen] = useState(false);
   const [actionToast, setActionToast] = useState<string | null>(null);
+
+  const refresh = useCallback(async () => {
+    try {
+      const data = await leadsDb.getLeads();
+      setLeads(data);
+      setLoadError(null);
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 401) {
+        onSessionExpired();
+        return;
+      }
+      setLoadError("Impossible de charger les dossiers. Vérifiez votre connexion.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [onSessionExpired]);
+
+  // Initial load + light polling so new submissions from visitors appear live.
+  useEffect(() => {
+    refresh();
+    const interval = setInterval(refresh, 20000);
+    return () => clearInterval(interval);
+  }, [refresh]);
 
   // Form state for creating a new manual daycare entry
   const [newLeadForm, setNewLeadForm] = useState({
@@ -28,35 +56,32 @@ export default function AdminDashboard({ onBackToSite, logoSrc }: AdminDashboard
     message: "",
   });
 
-  // Listen to live database updates
-  useEffect(() => {
-    const handleDbUpdate = () => {
-      setLeads(leadsDb.getLeads());
-    };
-
-    window.addEventListener("lacentrale_db_updated", handleDbUpdate);
-    window.addEventListener("storage", handleDbUpdate);
-
-    return () => {
-      window.removeEventListener("lacentrale_db_updated", handleDbUpdate);
-      window.removeEventListener("storage", handleDbUpdate);
-    };
-  }, []);
-
   const triggerToast = (msg: string) => {
     setActionToast(msg);
     setTimeout(() => setActionToast(null), 3200);
   };
 
-  const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Supprimer définitivement le dossier de "${name}" ?`)) {
-      leadsDb.deleteLead(id);
+  const handleApiError = (e: unknown, fallbackMsg: string) => {
+    if (e instanceof ApiError && e.status === 401) {
+      onSessionExpired();
+      return;
+    }
+    triggerToast(fallbackMsg);
+  };
+
+  const handleDelete = async (id: string, name: string) => {
+    if (!window.confirm(`Supprimer définitivement le dossier de "${name}" ?`)) return;
+    try {
+      await leadsDb.deleteLead(id);
+      setLeads((prev) => prev.filter((l) => l.id !== id));
       triggerToast(`Dossier "${name}" retiré de la base.`);
       if (selectedLead?.id === id) setSelectedLead(null);
+    } catch (e) {
+      handleApiError(e, "Impossible de supprimer ce dossier pour le moment.");
     }
   };
 
-  const handleCreateNewLead = (e: React.FormEvent) => {
+  const handleCreateNewLead = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newLeadForm.parentName.trim() || !newLeadForm.phone.trim()) {
       alert("Veuillez renseigner le nom du parent et un numéro de téléphone joignable.");
@@ -68,35 +93,40 @@ export default function AdminDashboard({ onBackToSite, logoSrc }: AdminDashboard
       .map((s) => s.trim())
       .filter(Boolean);
 
-    leadsDb.addLead({
-      parentName: newLeadForm.parentName.trim(),
-      childAge: newLeadForm.childAge.trim() || "Enfant (Section à définir)",
-      email: newLeadForm.email.trim(),
-      phone: newLeadForm.phone.trim(),
-      type: newLeadForm.type,
-      sector: newLeadForm.sector,
-      solutions: solutionsArray.length > 0 ? solutionsArray : ["Accueil Standard"],
-      formula: newLeadForm.formula,
-      startDate: newLeadForm.startDate,
-      message: newLeadForm.message.trim(),
-      status: "Nouveau",
-      source: "Admin Direct",
-    });
+    try {
+      const created = await leadsDb.addLead({
+        parentName: newLeadForm.parentName.trim(),
+        childAge: newLeadForm.childAge.trim() || "Enfant (Section à définir)",
+        email: newLeadForm.email.trim(),
+        phone: newLeadForm.phone.trim(),
+        type: newLeadForm.type,
+        sector: newLeadForm.sector,
+        solutions: solutionsArray.length > 0 ? solutionsArray : ["Accueil Standard"],
+        formula: newLeadForm.formula,
+        startDate: newLeadForm.startDate,
+        message: newLeadForm.message.trim(),
+        status: "Nouveau",
+        source: "Admin Direct",
+      });
 
-    setIsNewLeadModalOpen(false);
-    triggerToast("Dossier d'inscription enregistré avec succès !");
-    setNewLeadForm({
-      parentName: "",
-      childAge: "",
-      email: "",
-      phone: "",
-      type: "CRÈCHE",
-      sector: "MARCHÉ CENTRAL",
-      solutions: "Temps plein continu (7h30–18h), Cuisine bio maison, Motricité libre",
-      formula: "Temps plein continu",
-      startDate: "Immédiat",
-      message: "",
-    });
+      setLeads((prev) => [created, ...prev]);
+      setIsNewLeadModalOpen(false);
+      triggerToast("Dossier d'inscription enregistré avec succès !");
+      setNewLeadForm({
+        parentName: "",
+        childAge: "",
+        email: "",
+        phone: "",
+        type: "CRÈCHE",
+        sector: "MARCHÉ CENTRAL",
+        solutions: "Temps plein continu (7h30–18h), Cuisine bio maison, Motricité libre",
+        formula: "Temps plein continu",
+        startDate: "Immédiat",
+        message: "",
+      });
+    } catch (e) {
+      handleApiError(e, "Impossible d'enregistrer ce dossier pour le moment.");
+    }
   };
 
   // Tab counts
@@ -105,7 +135,7 @@ export default function AdminDashboard({ onBackToSite, logoSrc }: AdminDashboard
     (l) => l.type === "VISITE" || l.source === "Formulaire Hero" || l.status === "Visite programmée"
   ).length;
   const countAbonnes = leads.filter(
-    (l) => l.type === "NEWSLETTER" || l.source === "Newsletter"
+    (l) => l.type === "NEWSLETTER" || l.source === "Newsletter" || l.source === "Espace Parents"
   ).length;
 
   // Filtered Leads
@@ -119,7 +149,7 @@ export default function AdminDashboard({ onBackToSite, logoSrc }: AdminDashboard
         (l) => l.type === "VISITE" || l.source === "Formulaire Hero" || l.status === "Visite programmée"
       );
     } else if (activeTab === "abonnes") {
-      result = result.filter((l) => l.type === "NEWSLETTER" || l.source === "Newsletter");
+      result = result.filter((l) => l.type === "NEWSLETTER" || l.source === "Newsletter" || l.source === "Espace Parents");
     }
 
     if (searchQuery.trim()) {
@@ -197,6 +227,17 @@ export default function AdminDashboard({ onBackToSite, logoSrc }: AdminDashboard
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               <span>Retour au site public</span>
+            </button>
+
+            <button
+              onClick={onLogout}
+              className="flex items-center space-x-2 px-5 py-2.5 rounded-full bg-[#301353] hover:bg-[#230C3E] text-white transition cursor-pointer text-xs sm:text-sm font-bold tracking-wide shadow-xs"
+              title="Se déconnecter du panneau d'administration"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span>Déconnexion</span>
             </button>
           </div>
         </div>
@@ -322,10 +363,8 @@ export default function AdminDashboard({ onBackToSite, logoSrc }: AdminDashboard
 
               <button
                 onClick={() => {
-                  if (window.confirm("Réinitialiser avec les dossiers de démonstration ?")) {
-                    leadsDb.resetToDemo();
-                    triggerToast("Dossiers réinitialisés.");
-                  }
+                  refresh();
+                  triggerToast("Dossiers actualisés.");
                 }}
                 className="p-2.5 rounded-xl bg-white hover:bg-[#FAF6F0] border border-[#DCD4C7] text-[#736387] hover:text-[#301353] transition cursor-pointer shadow-2xs"
                 title="Actualiser les données"
@@ -339,7 +378,21 @@ export default function AdminDashboard({ onBackToSite, logoSrc }: AdminDashboard
 
           {/* Table Container (Statut Column Fully Removed) */}
           <div className="w-full overflow-x-auto">
-            {filteredLeads.length === 0 ? (
+            {isLoading ? (
+              <div className="text-center py-20 text-[#736387] bg-white">
+                <p className="text-sm font-bold text-[#301353]">Chargement des dossiers…</p>
+              </div>
+            ) : loadError ? (
+              <div className="text-center py-20 bg-white">
+                <p className="text-sm font-bold text-rose-600">{loadError}</p>
+                <button
+                  onClick={() => refresh()}
+                  className="mt-3 px-4 py-2 rounded-xl bg-[#301353] text-white text-xs font-bold cursor-pointer"
+                >
+                  Réessayer
+                </button>
+              </div>
+            ) : filteredLeads.length === 0 ? (
               <div className="text-center py-20 text-[#736387] bg-white">
                 <div className="w-12 h-12 rounded-full bg-[#FAF6F0] mx-auto flex items-center justify-center text-[#736387] mb-2.5 border border-[#ECE5DA]">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
