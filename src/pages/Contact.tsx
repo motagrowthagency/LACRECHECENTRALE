@@ -9,13 +9,12 @@ import { leadsDb } from "@/lib/leadsDb";
 import { ADDRESS, PHONE_MOBILE, PHONE_LANDLINE, WHATSAPP_RAW, EMAIL_CONTACT, MAPS_URL } from "@/data/business";
 
 export default function Contact() {
-  const { showToast, openRdv } = useSite();
+  const { showToast } = useSite();
   const [form, setForm] = useState({
     parentName: "",
     email: "",
     phone: "",
     childAge: "",
-    accueil: "Crèche régulière",
     message: "",
   });
 
@@ -33,9 +32,9 @@ export default function Contact() {
         email: form.email.trim(),
         childAge: form.childAge || "Non précisé",
         type: "VISITE",
-        solutions: [form.accueil.toUpperCase()],
+        solutions: ["CRÈCHE RÉGULIÈRE"],
         sector: "MARCHÉ CENTRAL",
-        formula: form.accueil,
+        formula: "Crèche régulière",
         startDate: "À définir",
         message: form.message || "Demande envoyée depuis le formulaire de contact.",
         source: "Formulaire Contact",
@@ -47,7 +46,7 @@ export default function Contact() {
     }
 
     showToast("Votre message a bien été envoyé à la direction !");
-    setForm({ parentName: "", email: "", phone: "", childAge: "", accueil: "Crèche régulière", message: "" });
+    setForm({ parentName: "", email: "", phone: "", childAge: "", message: "" });
   };
 
   return (
@@ -99,7 +98,7 @@ export default function Contact() {
                 ))}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 <a
                   href={`tel:${PHONE_MOBILE.replace(/\s/g, "")}`}
                   className="flex items-center justify-center space-x-2 px-4 py-3 rounded-xl bg-[#301353] hover:bg-[#200B3A] text-white text-xs font-bold shadow-md transition"
@@ -116,13 +115,6 @@ export default function Contact() {
                   <SvgIcons.WhatsApp className="w-3.5 h-3.5" />
                   <span>WhatsApp</span>
                 </a>
-                <button
-                  onClick={() => openRdv("Prendre rendez-vous pour visiter La Centrale Crèche")}
-                  className="flex items-center justify-center space-x-2 px-4 py-3 rounded-xl border border-[#D9C8B5] text-xs font-bold text-[#301353] hover:bg-[#FAF6F0] transition cursor-pointer"
-                >
-                  <SvgIcons.Calendar className="w-3.5 h-3.5" />
-                  <span>Visite</span>
-                </button>
               </div>
 
               <Photo src={facade} alt="Façade de La Centrale Crèche, 125 Rue Allal Ben Abdallah, Casablanca" ratio="aspect-[4/3]" />
@@ -174,22 +166,6 @@ export default function Contact() {
                       placeholder="Ex. 18 mois"
                       className="w-full bg-[#FAF6F0] border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
                     />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Type d'accueil souhaité</label>
-                    <div className="relative">
-                      <select
-                        value={form.accueil}
-                        onChange={(e) => setForm({ ...form, accueil: e.target.value })}
-                        className="w-full bg-[#FAF6F0] border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-[#301353] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition cursor-pointer appearance-none pr-8"
-                      >
-                        <option>Crèche régulière</option>
-                        <option>Halte-garderie</option>
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#736387]">
-                        <SvgIcons.ChevronDown className="w-4 h-4" />
-                      </div>
-                    </div>
                   </div>
                   <div className="sm:col-span-2">
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Message</label>

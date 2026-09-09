@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import infographicImg from "@/imports/infographie_creche.png";
 import groupeTableRouge from "@/imports/photos/creche-groupe-table-rouge.jpeg";
 import atelierTable from "@/imports/photos/creche-atelier-table.jpeg";
-import salleJeux from "@/imports/photos/creche-salle-jeux.jpeg";
 import salleClasse from "@/imports/photos/creche-salle-classe.jpeg";
 import { SvgIcons } from "@/components/icons";
 import Photo from "@/components/Photo";
@@ -14,7 +13,7 @@ import { useSite } from "@/context/SiteContext";
 import { leadsDb } from "@/lib/leadsDb";
 
 export default function Home() {
-  const { showToast, openRdv } = useSite();
+  const { showToast } = useSite();
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const [heroForm, setHeroForm] = useState({
     parentName: "",
@@ -37,11 +36,11 @@ export default function Home() {
         email: heroForm.email.trim(),
         childAge: heroForm.childAge,
         type: "VISITE",
-        solutions: [`SECTION : ${heroForm.childAge.toUpperCase()}`, "JOURNÉE CONTINUE (7H30–18H)", "VISITE DÉCOUVERTE"],
+        solutions: [`SECTION : ${heroForm.childAge.toUpperCase()}`, "JOURNÉE CONTINUE (7H30–18H)"],
         sector: "MARCHÉ CENTRAL",
         formula: "Journée continue",
         startDate: "Rentrée 2026 / Immédiat",
-        message: "Demande de place et visite envoyée depuis le formulaire d'accueil.",
+        message: "Demande de place envoyée depuis le formulaire d'accueil.",
         source: "Formulaire Hero",
         status: "Nouveau",
       });
@@ -84,13 +83,13 @@ export default function Home() {
               </p>
 
               <div className="flex flex-wrap items-center gap-3 pt-1">
-                <button
-                  onClick={() => openRdv("Prendre rendez-vous pour visiter La Centrale Crèche")}
+                <a
+                  href="#demande-place"
                   className="inline-flex items-center space-x-2 px-6 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-[4px_4px_0px_0px_#C86446] hover:shadow-[2px_2px_0px_0px_#C86446] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150"
                 >
-                  <span>Demander une visite</span>
+                  <span>Demander une place</span>
                   <span>→</span>
-                </button>
+                </a>
                 <Link
                   to="/services"
                   className="inline-flex items-center space-x-2 px-6 py-3.5 rounded-full border-2 border-[#301353] text-[#301353] text-sm font-bold hover:bg-white transition"
@@ -167,7 +166,7 @@ export default function Home() {
       </section>
 
       {/* ─── FORMULAIRE DE DEMANDE (bande claire) ─────────────── */}
-      <section className="py-20 bg-white border-b border-[#ECE5DA]">
+      <section id="demande-place" className="py-20 bg-white border-b border-[#ECE5DA] scroll-mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
             <div className="lg:col-span-5 space-y-4">
@@ -176,8 +175,7 @@ export default function Home() {
                 Réservez la place de votre enfant en 2 minutes
               </h2>
               <p className="text-sm text-[#5D4E72] leading-relaxed">
-                Un membre de la direction vous recontacte sous 24h pour organiser une visite découverte, sans
-                engagement.
+                Un membre de la direction vous recontacte sous 24h pour finaliser votre demande, sans engagement.
               </p>
               <div className="space-y-2.5 pt-2">
                 <div className="flex items-center space-x-2 text-xs font-bold text-[#301353]">
@@ -186,7 +184,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center space-x-2 text-xs font-bold text-[#301353]">
                   <SvgIcons.Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Visite découverte sans engagement</span>
+                  <span>Aucun engagement de votre part</span>
                 </div>
               </div>
             </div>
@@ -388,10 +386,9 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               { title: "Crèche régulière", sub: "2 mois – 5 ans", text: "Accueil quotidien, éveil global et suivi personnalisé du développement de votre enfant.", rot: "-rotate-1", img: atelierTable },
-              { title: "Halte-garderie", sub: "Tout âge, quelques heures", text: "Garde ponctuelle et flexible, à l'heure ou à la demi-journée, selon vos besoins.", rot: "rotate-0", img: salleJeux },
               { title: "Activités d'éveil", sub: "Motricité, langage, socialisation", text: "Ateliers sensoriels, comptines bilingues et jeux de rôle adaptés à chaque âge.", rot: "rotate-1", img: salleClasse },
             ].map((s, i) => (
               <div
@@ -441,7 +438,7 @@ export default function Home() {
 
             <div className="lg:col-span-5 space-y-4">
               {[
-                { quote: "La flexibilité de la halte-garderie est parfaite pour mon emploi du temps.", name: "Karim T.", child: "Parent de Lina (2 ans et demi)", color: "#ECA52B" },
+                { quote: "Les horaires flexibles jusqu'à 19h sont parfaits pour mon emploi du temps.", name: "Karim T.", child: "Parent de Lina (2 ans et demi)", color: "#ECA52B" },
                 { quote: "La direction est d'une écoute et d'une transparence exemplaires. Merci à l'équipe !", name: "Kenza & Mehdi T.", child: "Parents de Ghali (3 ans)", color: "#7E3FAF" },
               ].map((t, i) => (
                 <div key={i} className={`bg-[#FAF6F0] rounded-2xl p-5 border border-[#ECE5DA] ${i === 0 ? "rotate-1" : "-rotate-1"}`}>
@@ -474,20 +471,20 @@ export default function Home() {
             Envie de découvrir <span className="italic">La Centrale Crèche</span> ?
           </h2>
           <p className="text-sm sm:text-base text-white/85 max-w-xl mx-auto">
-            Visitez notre crèche, rencontrez l'équipe et posez toutes vos questions.
+            Rencontrez l'équipe et posez toutes vos questions à la direction.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => openRdv("Prendre rendez-vous pour visiter La Centrale Crèche")}
+            <a
+              href="#demande-place"
               className="px-7 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-lg transition"
             >
-              Prendre rendez-vous
-            </button>
+              Demander une place
+            </a>
             <Link
               to="/contact"
               className="px-7 py-3.5 rounded-full border-2 border-white text-white text-sm font-bold hover:bg-white hover:text-[#C86446] transition"
             >
-              Nous appeler
+              Nous contacter
             </Link>
           </div>
         </div>

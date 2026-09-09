@@ -3,7 +3,6 @@ import { SvgIcons } from "@/components/icons";
 import Photo from "@/components/Photo";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
-import { useSite } from "@/context/SiteContext";
 import coinSieste from "@/imports/photos/creche-coin-sieste.jpeg";
 import salleJeux from "@/imports/photos/creche-salle-jeux.jpeg";
 import atelierTable from "@/imports/photos/creche-atelier-table.jpeg";
@@ -38,8 +37,6 @@ const EVENTS = [
 ];
 
 export default function Life() {
-  const { openRdv } = useSite();
-
   return (
     <>
       {/* ─── HERO ─────────────────────────────────────────────── */}
@@ -148,18 +145,12 @@ export default function Life() {
             Envie de voir <span className="italic">nos espaces en vrai</span> ?
           </h2>
           <p className="text-sm sm:text-base text-white/85 max-w-xl mx-auto">
-            Planifiez une visite et découvrez l'ambiance chaleureuse de La Centrale Crèche.
+            Contactez-nous pour découvrir l'ambiance chaleureuse de La Centrale Crèche.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => openRdv("Prendre rendez-vous pour visiter La Centrale Crèche")}
-              className="px-7 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-lg transition"
-            >
-              Prendre rendez-vous
-            </button>
             <Link
               to="/contact"
-              className="px-7 py-3.5 rounded-full border-2 border-white text-white text-sm font-bold hover:bg-white hover:text-[#C86446] transition"
+              className="px-7 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-lg transition"
             >
               Nous contacter
             </Link>

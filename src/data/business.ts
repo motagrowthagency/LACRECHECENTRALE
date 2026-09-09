@@ -1,5 +1,5 @@
 // ─── Casablanca Real Business Data ──────────────────────────────────────────
-export const CRECHE_NAME = "La Centrale Crèche & Halte Garderie";
+export const CRECHE_NAME = "La Centrale Crèche";
 export const CITY = "Casablanca";
 export const ADDRESS = "125, Rue Allal Ben Abdallah (Face au Marché Central), Casablanca";
 export const PHONE_MOBILE = "06 61 67 23 83";

@@ -5,7 +5,7 @@
 
 import { apiFetch } from "./api";
 
-export type LeadType = "CRÈCHE" | "HALTE-GARDERIE" | "VISITE" | "NEWSLETTER" | "RECRUTEMENT";
+export type LeadType = "CRÈCHE" | "VISITE" | "NEWSLETTER" | "RECRUTEMENT";
 export type LeadStatus = "Nouveau" | "Contacté" | "Visite programmée" | "Inscrit" | "Archivé";
 
 export interface LeadRecord {
@@ -23,7 +23,6 @@ export interface LeadRecord {
   source:
     | "Formulaire Visite"
     | "Formulaire Hero"
-    | "Modal Devis"
     | "Newsletter"
     | "Admin Direct"
     | "Inscription Rapide"

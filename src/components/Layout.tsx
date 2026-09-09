@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { NavLink, Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "@/imports/logo_creche_centrale.png";
 import { SvgIcons } from "./icons";
-import { useSite } from "@/context/SiteContext";
 import {
   CRECHE_NAME,
   ADDRESS,
@@ -25,7 +24,6 @@ const NAV_LINKS = [
 
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { openRdv } = useSite();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -89,7 +87,7 @@ export default function Layout() {
                 La Centrale <span className="italic text-[#C86446]">Crèche</span>
               </span>
               <span className="text-[10px] sm:text-[11px] uppercase font-bold tracking-[0.15em] text-[#736387] whitespace-nowrap">
-                Halte Garderie · Casablanca
+                Crèche · Casablanca
               </span>
             </div>
           </Link>
@@ -112,14 +110,6 @@ export default function Layout() {
           </nav>
 
           <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
-            <button
-              onClick={() => openRdv("Prendre rendez-vous pour visiter La Centrale Crèche")}
-              className="hidden sm:inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-full border-2 border-[#301353] text-xs font-bold text-[#301353] hover:bg-[#301353] hover:text-white transition cursor-pointer whitespace-nowrap"
-            >
-              <SvgIcons.Calendar className="w-3.5 h-3.5" />
-              <span>Prendre RDV</span>
-            </button>
-
             <button
               onClick={() => navigate("/inscription-tarifs")}
               className="hidden sm:block relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#C86446] text-white text-xs font-bold shadow-[3px_3px_0px_0px_#301353] hover:shadow-[1px_1px_0px_0px_#301353] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 cursor-pointer whitespace-nowrap"
@@ -153,12 +143,6 @@ export default function Layout() {
             ))}
             <div className="pt-3 flex flex-col gap-2.5">
               <button
-                onClick={() => openRdv("Prendre rendez-vous")}
-                className="w-full py-2.5 text-center text-xs font-bold rounded-full border-2 border-[#301353] text-[#301353]"
-              >
-                Prendre RDV
-              </button>
-              <button
                 onClick={() => navigate("/inscription-tarifs")}
                 className="w-full py-2.5 text-center text-xs font-bold rounded-full bg-[#C86446] text-white"
               >
@@ -186,7 +170,7 @@ export default function Layout() {
                     La Centrale <span className="italic text-[#F4B23E]">Crèche</span>
                   </div>
                   <div className="text-[10px] text-slate-500 font-medium">
-                    Halte Garderie · Casablanca
+                    Crèche · Casablanca
                   </div>
                 </div>
               </div>
@@ -255,13 +239,13 @@ export default function Layout() {
               <p className="text-xs text-slate-400 leading-relaxed">
                 Une question ? Contactez directement la direction.
               </p>
-              <button
-                onClick={() => openRdv("Demande de place & Visite")}
+              <Link
+                to="/contact"
                 className="inline-flex items-center text-xs font-bold text-[#F4B23E] hover:text-[#EAA43A] transition cursor-pointer group"
               >
-                <span>Prendre rendez-vous</span>
+                <span>Nous contacter</span>
                 <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
-              </button>
+              </Link>
               <div>
                 <Link to="/admin" className="text-[11px] text-slate-500 hover:text-slate-300 transition">
                   Espace Gestionnaire

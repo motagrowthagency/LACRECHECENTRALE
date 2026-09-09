@@ -5,11 +5,8 @@ import entree from "@/imports/photos/creche-entree.jpeg";
 import salleActivites from "@/imports/photos/creche-salle-activites.jpeg";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
-import { useSite } from "@/context/SiteContext";
 
 export default function About() {
-  const { openRdv } = useSite();
-
   return (
     <>
       {/* ─── HERO ─────────────────────────────────────────────── */}
@@ -30,7 +27,7 @@ export default function About() {
             </span>
           </h1>
           <p className="text-sm sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            Découvrez la mission, les valeurs et l'équipe qui font de La Centrale Crèche & Halte Garderie un cocon
+            Découvrez la mission, les valeurs et l'équipe qui font de La Centrale Crèche un cocon
             bienveillant pour les tout-petits de Casablanca.
           </p>
         </div>
@@ -66,7 +63,7 @@ export default function About() {
                 Accompagner les familles casablancaises depuis des décennies
               </h2>
               <p className="text-sm sm:text-base text-[#5D4E72] leading-relaxed">
-                Forte de plus de 35 ans d'expérience, La Centrale Crèche & Halte Garderie accompagne les familles du
+                Forte de plus de 35 ans d'expérience, La Centrale Crèche accompagne les familles du
                 centre-ville de Casablanca dans l'éveil de leurs tout-petits. Installée face au Marché Central, notre
                 structure a grandi au fil des années tout en gardant sa mission d'origine intacte : offrir un cadre
                 sûr, chaleureux et stimulant pour le développement des enfants de 3 mois à 5 ans.
@@ -266,15 +263,9 @@ export default function About() {
             Abdallah, Casablanca.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => openRdv("Prendre rendez-vous pour visiter La Centrale Crèche")}
-              className="px-7 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-lg transition"
-            >
-              Prendre rendez-vous
-            </button>
             <Link
               to="/contact"
-              className="px-7 py-3.5 rounded-full border-2 border-white text-white text-sm font-bold hover:bg-white hover:text-[#C86446] transition"
+              className="px-7 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-lg transition"
             >
               Nous contacter
             </Link>

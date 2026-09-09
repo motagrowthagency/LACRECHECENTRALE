@@ -31,7 +31,6 @@ export default function Enrollment() {
     phone: "",
     email: "",
     childAge: "3 à 12 mois (Section Bébés)",
-    accueil: "Crèche régulière",
     message: "",
   });
 
@@ -49,9 +48,9 @@ export default function Enrollment() {
         email: form.email.trim(),
         childAge: form.childAge,
         type: "VISITE",
-        solutions: [`SECTION : ${form.childAge.toUpperCase()}`, form.accueil.toUpperCase()],
+        solutions: [`SECTION : ${form.childAge.toUpperCase()}`, "CRÈCHE RÉGULIÈRE"],
         sector: "MARCHÉ CENTRAL",
-        formula: form.accueil,
+        formula: "Crèche régulière",
         startDate: "Rentrée 2026 / Immédiat",
         message: form.message || "Demande d'inscription envoyée depuis la page Inscription & Tarifs.",
         source: "Formulaire Inscription",
@@ -63,7 +62,7 @@ export default function Enrollment() {
     }
 
     showToast("Votre demande d'inscription a bien été envoyée à la direction !");
-    setForm({ parentName: "", phone: "", email: "", childAge: "3 à 12 mois (Section Bébés)", accueil: "Crèche régulière", message: "" });
+    setForm({ parentName: "", phone: "", email: "", childAge: "3 à 12 mois (Section Bébés)", message: "" });
   };
 
   return (
@@ -138,7 +137,6 @@ export default function Enrollment() {
               <div className="space-y-3 pt-1">
                 {[
                   { icon: SvgIcons.Calendar, text: "Crèche régulière : tarif mensuel selon le nombre de jours par semaine." },
-                  { icon: SvgIcons.Clock, text: "Halte-garderie : tarif à l'heure ou à la demi-journée." },
                   { icon: SvgIcons.ShieldCheck, text: "Frais d'inscription / dossier (si applicable)." },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start space-x-3 bg-white rounded-xl p-4 border border-[#ECE5DA]">
@@ -175,7 +173,7 @@ export default function Enrollment() {
           <div className="text-center mb-10 space-y-3">
             <Kicker className="justify-center">Demande d'inscription</Kicker>
             <h2 className="font-serif-heading text-3xl sm:text-4xl text-[#301353] leading-tight font-normal">
-              Demander une visite ou une place
+              Demander une place
             </h2>
           </div>
 
@@ -226,22 +224,6 @@ export default function Enrollment() {
                     <option>2 à 3 ans (Petite Section)</option>
                     <option>3 à 4 ans (Moyenne Section)</option>
                     <option>4 à 5 ans (Grande Section)</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#736387]">
-                    <SvgIcons.ChevronDown className="w-4 h-4" />
-                  </div>
-                </div>
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Type d'accueil souhaité</label>
-                <div className="relative">
-                  <select
-                    value={form.accueil}
-                    onChange={(e) => setForm({ ...form, accueil: e.target.value })}
-                    className="w-full bg-[#FAF6F0] border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-[#301353] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition cursor-pointer appearance-none pr-8"
-                  >
-                    <option>Crèche régulière</option>
-                    <option>Halte-garderie</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#736387]">
                     <SvgIcons.ChevronDown className="w-4 h-4" />

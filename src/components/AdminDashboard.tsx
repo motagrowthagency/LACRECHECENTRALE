@@ -723,7 +723,6 @@ export default function AdminDashboard({ onBackToSite, onLogout, onSessionExpire
                   >
                     <option value="CRÈCHE">Crèche (3 mois – 4 ans)</option>
                     <option value="VISITE">Visite & Rendez-vous</option>
-                    <option value="HALTE-GARDERIE">Halte-Garderie & Mercredis</option>
                     <option value="NEWSLETTER">Journal des Petits Pas</option>
                   </select>
                 </div>

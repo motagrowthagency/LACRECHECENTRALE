@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { SvgIcons } from "@/components/icons";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
-import { useSite } from "@/context/SiteContext";
 
 const QUESTIONS = [
   {
@@ -15,16 +14,12 @@ const QUESTIONS = [
     a: "La Centrale Crèche est ouverte du lundi au vendredi de 7h30 à 18h, avec une garde possible jusqu'à 19h pour les parents actifs. Fermeture les jours fériés.",
   },
   {
-    q: "Proposez-vous la halte-garderie ? Comment ça fonctionne ?",
-    a: "Oui, nous proposons un accueil ponctuel à l'heure ou à la demi-journée, idéal pour un rendez-vous, des courses ou une adaptation progressive avant une inscription régulière.",
-  },
-  {
     q: "Comment se passe la période d'adaptation ?",
     a: "L'adaptation se fait en douceur sur quelques jours : votre enfant est d'abord accompagné par vous, puis progressivement laissé seul avec l'équipe pour des durées croissantes.",
   },
   {
     q: "Quels sont les tarifs ?",
-    a: "Les tarifs varient selon la formule choisie (crèche régulière au mois ou halte-garderie à l'heure) et l'âge de l'enfant. Ils vous seront communiqués précisément lors de votre visite.",
+    a: "Les tarifs varient selon la formule mensuelle choisie et l'âge de l'enfant. Ils vous seront communiqués précisément par la direction.",
   },
   {
     q: "Mon enfant est-il assuré au sein de la crèche ?",
@@ -50,7 +45,6 @@ const QUESTIONS = [
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const { openRdv } = useSite();
 
   return (
     <>
@@ -121,15 +115,9 @@ export default function FAQ() {
             Notre équipe est à votre écoute pour répondre à toutes vos interrogations.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => openRdv("Prendre rendez-vous pour visiter La Centrale Crèche")}
-              className="px-7 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-lg transition"
-            >
-              Prendre rendez-vous
-            </button>
             <Link
               to="/contact"
-              className="px-7 py-3.5 rounded-full border-2 border-white text-white text-sm font-bold hover:bg-white hover:text-[#C86446] transition"
+              className="px-7 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-lg transition"
             >
               Nous contacter
             </Link>

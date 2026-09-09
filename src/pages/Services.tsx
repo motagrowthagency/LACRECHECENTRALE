@@ -7,7 +7,6 @@ import salleActivites from "@/imports/photos/creche-salle-activites.jpeg";
 import atelierTable from "@/imports/photos/creche-atelier-table.jpeg";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
-import { useSite } from "@/context/SiteContext";
 
 const AGE_GROUPS = [
   { age: "2 – 12 mois", label: "Section Bébés", focus: "Sécurité affective, éveil sensoriel, motricité globale." },
@@ -38,8 +37,6 @@ const TIMELINE = [
 ];
 
 export default function Services() {
-  const { openRdv } = useSite();
-
   return (
     <>
       {/* ─── HERO ─────────────────────────────────────────────── */}
@@ -58,8 +55,8 @@ export default function Services() {
             </span>
           </h1>
           <p className="text-sm sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            Nous accueillons les enfants de 2 mois à 5 ans, en crèche régulière ou en halte-garderie ponctuelle, avec
-            des activités adaptées à chaque âge.
+            Nous accueillons les enfants de 2 mois à 5 ans en crèche régulière, avec des activités adaptées à chaque
+            âge.
           </p>
         </div>
       </section>
@@ -106,50 +103,8 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ─── HALTE-GARDERIE ───────────────────────────────────── */}
-      <section className="py-20 sm:py-28 bg-white border-y border-[#ECE5DA]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 items-center">
-            <div className="lg:col-span-6 order-2 lg:order-1 space-y-5">
-              <Kicker>Tout âge, quelques heures</Kicker>
-              <h2 className="font-serif-heading text-3xl sm:text-4xl text-[#301353] leading-tight font-normal">
-                Halte-garderie
-              </h2>
-              <p className="text-sm sm:text-base text-[#5D4E72] leading-relaxed">
-                Accueil ponctuel, à l'heure ou à la demi-journée, selon vos besoins. Idéal pour un rendez-vous, des
-                courses, un besoin ponctuel ou une adaptation progressive avant une inscription régulière.
-              </p>
-              <div className="space-y-2.5 pt-2">
-                {["Même cadre sécurisant que la crèche régulière", "Activités adaptées à l'âge de votre enfant", "Réservation flexible selon vos disponibilités"].map((point, i) => (
-                  <div key={i} className="flex items-start space-x-2.5">
-                    <div className="mt-0.5 w-5 h-5 rounded-full bg-[#EBF6EE] flex items-center justify-center shrink-0">
-                      <SvgIcons.Check className="w-3 h-3 text-[#256F46]" />
-                    </div>
-                    <span className="text-sm text-[#4A3B5E] leading-relaxed">{point}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="lg:col-span-6 order-1 lg:order-2 relative">
-              <div className="relative max-w-[420px] ml-auto">
-                <div className="absolute -inset-4 rounded-[2.5rem] border-2 border-dashed border-[#301353]/20 -z-10" />
-                <div className="rotate-[2deg] hover:rotate-0 transition-transform duration-500">
-                  <Photo
-                    src={salleJeux}
-                    alt="Halte-garderie, accueil ponctuel des enfants"
-                    ratio="aspect-[4/3]"
-                    rounded="rounded-[1.75rem]"
-                    className="border-4 border-white shadow-2xl"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ─── ACTIVITÉS D'ÉVEIL ────────────────────────────────── */}
-      <section className="py-20 sm:py-28 bg-[#FAF6F0]">
+      <section className="py-20 sm:py-28 bg-[#FAF6F0] border-t border-[#ECE5DA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
             <Kicker className="justify-center">Ateliers & éveil</Kicker>
@@ -231,12 +186,12 @@ export default function Services() {
             >
               Voir l'inscription & les tarifs
             </Link>
-            <button
-              onClick={() => openRdv("Prendre rendez-vous pour visiter La Centrale Crèche")}
+            <Link
+              to="/contact"
               className="px-7 py-3.5 rounded-full border-2 border-white text-white text-sm font-bold hover:bg-white hover:text-[#C86446] transition"
             >
-              Demander une visite
-            </button>
+              Nous contacter
+            </Link>
           </div>
         </div>
       </section>
