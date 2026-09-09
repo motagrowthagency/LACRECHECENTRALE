@@ -4,14 +4,11 @@
 
   Options -Indexes
 
-  # 1. Route API requests to the PHP router
-  RewriteRule ^api(/.*)?$ api/index.php [QSA,L]
-
-  # 2. If the requested file physically exists (assets, images, etc.), serve it directly
+  # If the requested file physically exists (assets, images, etc.), serve it directly
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # 3. Fallback everything else (including /admin) to index.html for the React SPA
+  # Fallback everything else to index.html for the React SPA
   RewriteRule ^ index.html [L]
 </IfModule>
 
@@ -20,17 +17,6 @@
   Order allow,deny
   Deny from all
 </FilesMatch>
-
-# Security: never serve the data directory (leads, secrets) directly over HTTP,
-# even if it ends up inside the web root.
-<IfModule mod_alias.c>
-  RedirectMatch 403 ^/data/.*$
-</IfModule>
-<IfModule !mod_alias.c>
-  <LocationMatch "^/data/">
-    Require all denied
-  </LocationMatch>
-</IfModule>
 
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"

@@ -1,10 +1,7 @@
-import { useState } from "react";
 import { SvgIcons } from "@/components/icons";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
-import { useSite } from "@/context/SiteContext";
-import { EMAIL_CONTACT } from "@/data/business";
-import { leadsDb } from "@/lib/leadsDb";
+import { EMAIL_CONTACT, PHONE_MOBILE, WHATSAPP_RAW } from "@/data/business";
 
 const PROFILES = [
   { title: "Éducatrices de la petite enfance", icon: SvgIcons.AcademicCap },
@@ -21,40 +18,6 @@ const OFFERS = [
 ];
 
 export default function Careers() {
-  const { showToast } = useSite();
-  const [form, setForm] = useState({ name: "", email: "", phone: "", poste: "", message: "" });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.name.trim() || !form.email.trim()) {
-      showToast("Veuillez renseigner votre nom et votre email.");
-      return;
-    }
-
-    try {
-      await leadsDb.addLead({
-        parentName: form.name.trim(),
-        phone: form.phone.trim() || "Non renseigné",
-        email: form.email.trim(),
-        childAge: "—",
-        type: "RECRUTEMENT",
-        solutions: form.poste.trim() ? [form.poste.trim()] : [],
-        sector: "",
-        formula: form.poste.trim() || "Candidature spontanée",
-        startDate: "",
-        message: form.message || "Candidature envoyée depuis la page Recrutement.",
-        source: "Formulaire Recrutement",
-        status: "Nouveau",
-      });
-    } catch {
-      showToast("Une erreur est survenue. Merci de réessayer ou de nous contacter par email.");
-      return;
-    }
-
-    showToast("Votre candidature a bien été envoyée. Merci de votre intérêt pour La Centrale Crèche !");
-    setForm({ name: "", email: "", phone: "", poste: "", message: "" });
-  };
-
   return (
     <>
       {/* ─── HERO ─────────────────────────────────────────────── */}
@@ -141,7 +104,7 @@ export default function Careers() {
         </div>
       </section>
 
-      {/* ─── COMMENT POSTULER / FORMULAIRE ────────────────────── */}
+      {/* ─── COMMENT POSTULER ──────────────────────────────────── */}
       <section className="py-20 sm:py-28 bg-white">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 space-y-3">
@@ -150,74 +113,35 @@ export default function Careers() {
               Envoyez votre candidature
             </h2>
             <p className="text-sm text-[#5D4E72]">
-              Envoyez votre CV et lettre de motivation par email à{" "}
+              Pour plus d'informations, appelez-nous ou envoyez-nous un message sur WhatsApp. Vous pouvez aussi
+              envoyer votre CV par email à{" "}
               <a href={`mailto:${EMAIL_CONTACT}`} className="text-[#C86446] font-semibold hover:underline">
                 {EMAIL_CONTACT}
               </a>{" "}
-              ou déposez votre dossier directement à la crèche.
+              ou le déposer directement à la crèche.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-[#FAF6F0] rounded-3xl p-6 sm:p-8 border-2 border-[#301353] shadow-[6px_6px_0px_0px_#C86446] space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Nom & Prénom *</label>
-                <input
-                  type="text"
-                  required
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full bg-white border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Email *</label>
-                <input
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full bg-white border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Téléphone</label>
-                <input
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="w-full bg-white border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Poste souhaité</label>
-                <input
-                  type="text"
-                  value={form.poste}
-                  onChange={(e) => setForm({ ...form, poste: e.target.value })}
-                  placeholder="Ex. Éducatrice petite enfance"
-                  className="w-full bg-white border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Message</label>
-                <textarea
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  rows={4}
-                  placeholder="Présentez-vous en quelques lignes..."
-                  className="w-full bg-white border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition resize-none"
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-[#301353] hover:bg-[#200B3A] text-white font-bold text-xs sm:text-sm py-3.5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center space-x-2 group"
+          <div className="bg-[#FAF6F0] rounded-3xl p-6 sm:p-10 border-2 border-[#301353] shadow-[6px_6px_0px_0px_#C86446] grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a
+              href={`tel:${PHONE_MOBILE.replace(/\s/g, "")}`}
+              className="flex flex-col items-center justify-center text-center gap-2 bg-[#301353] hover:bg-[#200B3A] text-white font-bold py-8 px-4 rounded-2xl shadow-md transition"
             >
-              <span>Envoyer ma candidature</span>
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </button>
-          </form>
+              <SvgIcons.Phone className="w-7 h-7" />
+              <span className="text-sm">Appelez-nous</span>
+              <span className="text-xs font-normal text-white/80">{PHONE_MOBILE}</span>
+            </a>
+            <a
+              href={`https://wa.me/${WHATSAPP_RAW}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center text-center gap-2 bg-[#256F46] hover:bg-[#1c5535] text-white font-bold py-8 px-4 rounded-2xl shadow-md transition"
+            >
+              <SvgIcons.WhatsApp className="w-7 h-7" />
+              <span className="text-sm">WhatsApp</span>
+              <span className="text-xs font-normal text-white/80">{PHONE_MOBILE}</span>
+            </a>
+          </div>
         </div>
       </section>
     </>

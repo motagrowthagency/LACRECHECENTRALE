@@ -1,13 +1,10 @@
-import { useState } from "react";
 import { SvgIcons } from "@/components/icons";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
-import { useSite } from "@/context/SiteContext";
-import { leadsDb } from "@/lib/leadsDb";
-import { WHATSAPP_RAW } from "@/data/business";
+import { PHONE_MOBILE, WHATSAPP_RAW } from "@/data/business";
 
 const STEPS = [
-  { title: "Prendre contact", text: "Par téléphone ou via notre formulaire en ligne." },
+  { title: "Prendre contact", text: "Par téléphone ou sur WhatsApp." },
   { title: "Visiter la crèche", text: "Rencontrer l'équipe et découvrir nos espaces." },
   { title: "Vérifier la disponibilité", text: "Confirmation des places selon la section." },
   { title: "Compléter le dossier", text: "Rassembler les pièces nécessaires à l'inscription." },
@@ -25,46 +22,6 @@ const DOCUMENTS = [
 ];
 
 export default function Enrollment() {
-  const { showToast } = useSite();
-  const [form, setForm] = useState({
-    parentName: "",
-    phone: "",
-    email: "",
-    childAge: "3 à 12 mois (Section Bébés)",
-    message: "",
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.parentName.trim() || !form.phone.trim()) {
-      showToast("Veuillez renseigner votre nom et votre numéro de téléphone.");
-      return;
-    }
-
-    try {
-      await leadsDb.addLead({
-        parentName: form.parentName.trim(),
-        phone: form.phone.trim(),
-        email: form.email.trim(),
-        childAge: form.childAge,
-        type: "VISITE",
-        solutions: [`SECTION : ${form.childAge.toUpperCase()}`, "CRÈCHE RÉGULIÈRE"],
-        sector: "MARCHÉ CENTRAL",
-        formula: "Crèche régulière",
-        startDate: "Rentrée 2026 / Immédiat",
-        message: form.message || "Demande d'inscription envoyée depuis la page Inscription & Tarifs.",
-        source: "Formulaire Inscription",
-        status: "Nouveau",
-      });
-    } catch {
-      showToast("Une erreur est survenue. Merci de réessayer ou de nous contacter par téléphone.");
-      return;
-    }
-
-    showToast("Votre demande d'inscription a bien été envoyée à la direction !");
-    setForm({ parentName: "", phone: "", email: "", childAge: "3 à 12 mois (Section Bébés)", message: "" });
-  };
-
   return (
     <>
       {/* ─── HERO ─────────────────────────────────────────────── */}
@@ -167,7 +124,7 @@ export default function Enrollment() {
         </div>
       </section>
 
-      {/* ─── FORMULAIRE D'INSCRIPTION ─────────────────────────── */}
+      {/* ─── DEMANDE D'INSCRIPTION ─────────────────────────────── */}
       <section className="py-20 sm:py-28 bg-[#FAF6F0]">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 space-y-3">
@@ -175,93 +132,31 @@ export default function Enrollment() {
             <h2 className="font-serif-heading text-3xl sm:text-4xl text-[#301353] leading-tight font-normal">
               Demander une place
             </h2>
+            <p className="text-sm text-[#5D4E72] leading-relaxed max-w-lg mx-auto">
+              Pour plus d'informations, appelez-nous ou envoyez-nous un message sur WhatsApp.
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#301353] shadow-[6px_6px_0px_0px_#C86446] space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Nom & Prénom du parent *</label>
-                <input
-                  type="text"
-                  required
-                  value={form.parentName}
-                  onChange={(e) => setForm({ ...form, parentName: e.target.value })}
-                  placeholder="Ex. Sarah Benjelloun"
-                  className="w-full bg-[#FAF6F0] border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Téléphone (WhatsApp) *</label>
-                <input
-                  type="tel"
-                  required
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="06 61 00 00 00"
-                  className="w-full bg-[#FAF6F0] border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Adresse Email</label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="sarah@exemple.com"
-                  className="w-full bg-[#FAF6F0] border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Âge de l'enfant</label>
-                <div className="relative">
-                  <select
-                    value={form.childAge}
-                    onChange={(e) => setForm({ ...form, childAge: e.target.value })}
-                    className="w-full bg-[#FAF6F0] border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-[#301353] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition cursor-pointer appearance-none pr-8"
-                  >
-                    <option>3 à 12 mois (Section Bébés)</option>
-                    <option>12 à 24 mois (Section Moyens)</option>
-                    <option>2 à 3 ans (Petite Section)</option>
-                    <option>3 à 4 ans (Moyenne Section)</option>
-                    <option>4 à 5 ans (Grande Section)</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#736387]">
-                    <SvgIcons.ChevronDown className="w-4 h-4" />
-                  </div>
-                </div>
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">Message (optionnel)</label>
-                <textarea
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  rows={3}
-                  placeholder="Précisez votre besoin, vos disponibilités..."
-                  className="w-full bg-[#FAF6F0] border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition resize-none"
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-[#301353] hover:bg-[#200B3A] text-white font-bold text-xs sm:text-sm py-3.5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center space-x-2 group"
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border-2 border-[#301353] shadow-[6px_6px_0px_0px_#C86446] grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a
+              href={`tel:${PHONE_MOBILE.replace(/\s/g, "")}`}
+              className="flex flex-col items-center justify-center text-center gap-2 bg-[#301353] hover:bg-[#200B3A] text-white font-bold py-8 px-4 rounded-2xl shadow-md transition"
             >
-              <span>Envoyer ma demande d'inscription</span>
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </button>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-              <a
-                href={`https://wa.me/${WHATSAPP_RAW}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 text-xs font-bold text-[#256F46] hover:text-[#1c5535] transition"
-              >
-                <SvgIcons.WhatsApp className="w-4 h-4" />
-                <span>Nous contacter par WhatsApp</span>
-              </a>
-            </div>
-          </form>
+              <SvgIcons.Phone className="w-7 h-7" />
+              <span className="text-sm">Appelez-nous</span>
+              <span className="text-xs font-normal text-white/80">{PHONE_MOBILE}</span>
+            </a>
+            <a
+              href={`https://wa.me/${WHATSAPP_RAW}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center text-center gap-2 bg-[#256F46] hover:bg-[#1c5535] text-white font-bold py-8 px-4 rounded-2xl shadow-md transition"
+            >
+              <SvgIcons.WhatsApp className="w-7 h-7" />
+              <span className="text-sm">WhatsApp</span>
+              <span className="text-xs font-normal text-white/80">{PHONE_MOBILE}</span>
+            </a>
+          </div>
         </div>
       </section>
     </>

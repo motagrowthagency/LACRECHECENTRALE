@@ -9,47 +9,10 @@ import Photo from "@/components/Photo";
 import Blob from "@/components/Blob";
 import Kicker from "@/components/Kicker";
 import Marquee from "@/components/Marquee";
-import { useSite } from "@/context/SiteContext";
-import { leadsDb } from "@/lib/leadsDb";
+import { PHONE_MOBILE, WHATSAPP_RAW } from "@/data/business";
 
 export default function Home() {
-  const { showToast } = useSite();
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
-  const [heroForm, setHeroForm] = useState({
-    parentName: "",
-    childAge: "3 à 12 mois (Section Bébés)",
-    phone: "",
-    email: "",
-  });
-
-  const handleHeroFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!heroForm.parentName.trim() || !heroForm.phone.trim()) {
-      showToast("Veuillez renseigner votre nom et votre numéro de téléphone.");
-      return;
-    }
-
-    try {
-      await leadsDb.addLead({
-        parentName: heroForm.parentName.trim(),
-        phone: heroForm.phone.trim(),
-        email: heroForm.email.trim(),
-        childAge: heroForm.childAge,
-        type: "VISITE",
-        solutions: [`SECTION : ${heroForm.childAge.toUpperCase()}`, "JOURNÉE CONTINUE (7H30–18H)"],
-        sector: "MARCHÉ CENTRAL",
-        formula: "Journée continue",
-        startDate: "Rentrée 2026 / Immédiat",
-        message: "Demande de place envoyée depuis le formulaire d'accueil.",
-        source: "Formulaire Hero",
-        status: "Nouveau",
-      });
-      showToast("Votre demande de place a bien été envoyée à la direction !");
-      setHeroForm({ parentName: "", childAge: "3 à 12 mois (Section Bébés)", phone: "", email: "" });
-    } catch {
-      showToast("Une erreur est survenue. Merci de réessayer ou de nous contacter par téléphone.");
-    }
-  };
 
   return (
     <>
@@ -84,11 +47,13 @@ export default function Home() {
 
               <div className="flex flex-wrap items-center gap-3 pt-1">
                 <a
-                  href="#demande-place"
+                  href={`https://wa.me/${WHATSAPP_RAW}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center space-x-2 px-6 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-[4px_4px_0px_0px_#C86446] hover:shadow-[2px_2px_0px_0px_#C86446] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150"
                 >
-                  <span>Demander une place</span>
-                  <span>→</span>
+                  <SvgIcons.WhatsApp className="w-4 h-4" />
+                  <span>Nous écrire sur WhatsApp</span>
                 </a>
                 <Link
                   to="/services"
@@ -165,22 +130,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── FORMULAIRE DE DEMANDE (bande claire) ─────────────── */}
-      <section id="demande-place" className="py-20 bg-white border-b border-[#ECE5DA] scroll-mt-24">
+      {/* ─── CONTACT DIRECT (bande claire) ─────────────────────── */}
+      <section className="py-20 bg-white border-b border-[#ECE5DA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-5 space-y-4">
               <Kicker>Rentrée 2026 & toute l'année</Kicker>
               <h2 className="font-serif-heading text-3xl sm:text-4xl text-[#301353] leading-tight font-normal">
-                Réservez la place de votre enfant en 2 minutes
+                Réservez la place de votre enfant
               </h2>
               <p className="text-sm text-[#5D4E72] leading-relaxed">
-                Un membre de la direction vous recontacte sous 24h pour finaliser votre demande, sans engagement.
+                Pour plus d'informations, appelez-nous ou envoyez-nous un message sur WhatsApp. La direction vous
+                répond directement, sans engagement.
               </p>
               <div className="space-y-2.5 pt-2">
                 <div className="flex items-center space-x-2 text-xs font-bold text-[#301353]">
                   <SvgIcons.Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Réponse rapide sous 24h</span>
+                  <span>Réponse rapide, en direct</span>
                 </div>
                 <div className="flex items-center space-x-2 text-xs font-bold text-[#301353]">
                   <SvgIcons.Check className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -190,81 +156,25 @@ export default function Home() {
             </div>
 
             <div className="lg:col-span-7">
-              <div className="bg-[#FAF6F0] rounded-3xl p-6 sm:p-8 border-2 border-[#301353] shadow-[6px_6px_0px_0px_#C86446]">
-                <form onSubmit={handleHeroFormSubmit} className="space-y-3.5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">
-                        Nom & Prénom du parent *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={heroForm.parentName}
-                        onChange={(e) => setHeroForm({ ...heroForm, parentName: e.target.value })}
-                        placeholder="Ex. Sarah Benjelloun"
-                        className="w-full bg-white border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">
-                        Âge de l'enfant *
-                      </label>
-                      <div className="relative">
-                        <select
-                          value={heroForm.childAge}
-                          onChange={(e) => setHeroForm({ ...heroForm, childAge: e.target.value })}
-                          className="w-full bg-white border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-[#301353] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition cursor-pointer appearance-none pr-8"
-                        >
-                          <option value="3 à 12 mois (Section Bébés)">3 à 12 mois (Section Bébés)</option>
-                          <option value="12 à 24 mois (Section Moyens)">12 à 24 mois (Section Moyens)</option>
-                          <option value="2 à 3 ans (Petite Section)">2 à 3 ans (Petite Section)</option>
-                          <option value="3 à 4 ans (Moyenne Section)">3 à 4 ans (Moyenne Section)</option>
-                          <option value="4 à 5 ans (Grande Section)">4 à 5 ans (Grande Section)</option>
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#736387]">
-                          <SvgIcons.ChevronDown className="w-4 h-4" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">
-                        Numéro de téléphone (WhatsApp) *
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={heroForm.phone}
-                        onChange={(e) => setHeroForm({ ...heroForm, phone: e.target.value })}
-                        placeholder="06 61 00 00 00"
-                        className="w-full bg-white border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#736387] mb-1">
-                        Adresse Email
-                      </label>
-                      <input
-                        type="email"
-                        value={heroForm.email}
-                        onChange={(e) => setHeroForm({ ...heroForm, email: e.target.value })}
-                        placeholder="sarah@exemple.com"
-                        className="w-full bg-white border border-[#E2D7C8] focus:border-[#301353] rounded-xl px-3.5 py-2.5 text-xs sm:text-[13px] font-medium text-[#301353] placeholder:text-[#9A8DAA] focus:outline-none focus:ring-2 focus:ring-[#301353]/10 transition"
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-[#301353] hover:bg-[#200B3A] text-white font-bold text-xs sm:text-sm py-3.5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 cursor-pointer group"
-                  >
-                    <span>Envoyer ma demande de place</span>
-                    <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </button>
-                </form>
+              <div className="bg-[#FAF6F0] rounded-3xl p-6 sm:p-8 border-2 border-[#301353] shadow-[6px_6px_0px_0px_#C86446] grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a
+                  href={`tel:${PHONE_MOBILE.replace(/\s/g, "")}`}
+                  className="flex flex-col items-center justify-center text-center gap-2 bg-[#301353] hover:bg-[#200B3A] text-white font-bold py-6 px-4 rounded-2xl shadow-md transition"
+                >
+                  <SvgIcons.Phone className="w-6 h-6" />
+                  <span className="text-sm">Appelez-nous</span>
+                  <span className="text-xs font-normal text-white/80">{PHONE_MOBILE}</span>
+                </a>
+                <a
+                  href={`https://wa.me/${WHATSAPP_RAW}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center justify-center text-center gap-2 bg-[#256F46] hover:bg-[#1c5535] text-white font-bold py-6 px-4 rounded-2xl shadow-md transition"
+                >
+                  <SvgIcons.WhatsApp className="w-6 h-6" />
+                  <span className="text-sm">WhatsApp</span>
+                  <span className="text-xs font-normal text-white/80">{PHONE_MOBILE}</span>
+                </a>
               </div>
             </div>
           </div>
@@ -475,17 +385,21 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
-              href="#demande-place"
-              className="px-7 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-lg transition"
+              href={`tel:${PHONE_MOBILE.replace(/\s/g, "")}`}
+              className="inline-flex items-center space-x-2 px-7 py-3.5 rounded-full bg-[#301353] hover:bg-[#200B3A] text-white text-sm font-bold shadow-lg transition"
             >
-              Demander une place
+              <SvgIcons.Phone className="w-4 h-4" />
+              <span>Appeler</span>
             </a>
-            <Link
-              to="/contact"
-              className="px-7 py-3.5 rounded-full border-2 border-white text-white text-sm font-bold hover:bg-white hover:text-[#C86446] transition"
+            <a
+              href={`https://wa.me/${WHATSAPP_RAW}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-2 px-7 py-3.5 rounded-full border-2 border-white text-white text-sm font-bold hover:bg-white hover:text-[#C86446] transition"
             >
-              Nous contacter
-            </Link>
+              <SvgIcons.WhatsApp className="w-4 h-4" />
+              <span>WhatsApp</span>
+            </a>
           </div>
         </div>
       </section>
